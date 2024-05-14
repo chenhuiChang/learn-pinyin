@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="zh">
+<head>
+    <meta charset="UTF-8">
+    <title>拼音顯示</title>
+    <style>
+        .pinyin-container {
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 2;
+        }
+        .pinyin-container div {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 5px;
+        }
+        .pinyin {
+            font-size: 1.3em;
+            color: grey;
+        }
+        .correct {
+            color: green;
+        }
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+
+<div id="pinyinOutput" class="pinyin-container"></div>
+
+<script>
+    const originalText = "{{ originalText }}";
+    const pinyinText = "{{ pinyinText }}";
+    console.log(originalText);
+    console.log(pinyinText);
+
+    const pinyinOutput = document.getElementById('pinyinOutput');
+
+    const originalChars = originalText.split(' ');
+    const pinyinWords = pinyinText.split(' ');
+
+    const pinyinSpans = [];
+
+    originalChars.forEach((char, index) => {
+        const charContainer = document.createElement('div');
+        charContainer.style.display = 'inline-flex';
+        charContainer.style.flexDirection = 'column';
+        charContainer.style.alignItems = 'center';
+        charContainer.style.marginRight = '10px';  // Add space between characters
+
+        const pinyinSpan = document.createElement('span');
+        pinyinSpan.className = 'pinyin';
+        pinyinSpan.dataset.pinyin = pinyinWords[index] || ''; // Ensure there's no undefined Pinyin
+        charContainer.appendChild(pinyinSpan);
+        pinyinSpans.push(pinyinSpan);
+
+        const charSpan = document.createElement('span');
+        charSpan.textContent = char;
+        charContainer.appendChild(charSpan);
+
+        pinyinOutput.appendChild(charContainer);
+    });
+
+    let currentIndex = 0;
+    let currentInput = '';
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Backspace') {
+            if (currentInput.length > 0) {
+                currentInput = currentInput.slice(0, -1);
+                updatePinyinColor();
+            }
+        } else if (event.key.length === 1 && /[0-9a-zA-Z\s]/.test(event.key)) {
+            currentInput += event.key;
+            updatePinyinColor();
+        }
+
+        // Prevent default action to avoid actual text input
+        event.preventDefault();
+    });
+
+    function updatePinyinColor() {
+        const pinyinWord = pinyinSpans[currentIndex].dataset.pinyin || '';
+        const inputWithoutSpaces = currentInput.replace(/\s+/g, '');
+        let updatedContent = '';
+
+        for (let i = 0; i < pinyinWord.length; i++) {
+            if (i < inputWithoutSpaces.length) {
+                if (inputWithoutSpaces[i] === pinyinWord[i]) {
+                    updatedContent += `<span class="correct">${pinyinWord[i]}</span>`;
+                } else {
+                    updatedContent += `<span class="incorrect">${pinyinWord[i]}</span>`;
+                }
+            } else {
+                updatedContent += pinyinWord[i];
+            }
+        }
+
+        pinyinSpans[currentIndex].innerHTML = updatedContent;
+
+        if (inputWithoutSpaces === pinyinWord) {
+            currentIndex++;
+            currentInput = '';
+        }
+    }
+</script>
+
+</body>
+</html>
