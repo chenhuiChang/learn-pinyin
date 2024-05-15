@@ -4,20 +4,49 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Pinyin Practice</title>
+    <style>
+        body {
+            background-color: #1e1e1e;
+        }
+        html, body {
+            height: 100%;
+            margin: 0;
+        }
+        body {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        .main {
+            background-color: white;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+            align-items: center;
+            text-align: center;
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+            border: 1px solid black;
+            padding: 20px;
+        }
+
+    </style>
 </head>
 <body>
-    <h1>Pinyin Practice</h1>
-    <form method="POST" action="/show">
-        <textarea name="text" rows="10" cols="50"></textarea>
-        <br>
-        <button type="submit">Convert to Pinyin</button>
-    </form>
-    {% if text %}
-        <h2>Original Text:</h2>
-        <p>{{ text }}</p>
-        <h2>Pinyin Text:</h2>
-        <p>{{ pinyin_text }}</p>
-    {% endif %}
+    <div class="main">
+        <h1>Pinyin Practice</h1>
+        <form method="POST" action="/show">
+            <textarea name="text" rows="20" cols="100"></textarea>
+            <br>
+            <button type="submit">Convert to Pinyin</button>
+        </form>
+        {% if text %}
+            <h2>Original Text:</h2>
+            <p>{{ text }}</p>
+            <h2>Pinyin Text:</h2>
+            <p>{{ pinyin_text }}</p>
+        {% endif %}
+    </div>
 </body>
 </html>
 

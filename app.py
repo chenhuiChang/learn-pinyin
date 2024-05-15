@@ -72,7 +72,7 @@ def show():
             pinyin_text_list.append(convert_to_pinyin(text))
         original_text = ' '.join(original_text_list)
         pinyin_text = ' '.join(pinyin_text_list)
-        return render_template('show.html', originalText=original_text, pinyinText=pinyin_text)
+        return render_template('show-new.html', originalText=original_text, pinyinText=pinyin_text)
 
 
 if __name__ == '__main__':

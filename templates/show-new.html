@@ -1,0 +1,232 @@
+<html lang="en">
+<head>
+    <meta charset="utf-8"/>
+    <meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+    <title>Pinyin Practice</title>
+    <script src="https://cdn.tailwindcss.com">
+    </script>
+    <link href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/5.15.3/css/all.min.css" rel="stylesheet"/>
+    <style>
+        body {
+            background-color: #1e1e1e;
+            color: #a3a3a3;
+            font-family: 'Inter', sans-serif;
+        }
+
+        .header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem;
+        }
+
+        .header-left {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-left img {
+            height: 1.5rem;
+            margin-right: 0.5rem;
+        }
+
+        .header-right {
+            display: flex;
+            align-items: center;
+        }
+
+        .header-right i {
+            margin-left: 1rem;
+            cursor: pointer;
+        }
+
+        .menu {
+            display: flex;
+            justify-content: center;
+            margin-top: 1rem;
+        }
+
+        .menu span {
+            margin: 0 0.5rem;
+            cursor: pointer;
+        }
+
+        .menu .active {
+            color: #fbbf24;
+        }
+
+        .paragraph-container {
+
+        }
+        .content {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: calc(100vh - 6rem);
+            text-align: center;
+            font-size: 1.25rem;
+            line-height: 1.75rem;
+            padding: 4em;
+            margin-top: 20px;
+        }
+
+        .footer {
+            display: flex;
+            justify-content: center;
+            padding: 1rem;
+            font-size: 0.875rem;
+        }
+
+        .footer span {
+            margin: 0 0.5rem;
+            cursor: pointer;
+        }
+
+        .pinyin-container {
+            display: flex;
+            flex-wrap: wrap;
+            line-height: 2;
+        }
+
+        .pinyin-container div {
+            display: inline-flex;
+            flex-direction: column;
+            align-items: center;
+            margin: 0 5px;
+        }
+
+        .pinyin {
+            color: grey;
+            min-width: 1em;
+        }
+
+        .correct {
+            color: green;
+        }
+
+        .incorrect {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+<div class="header">
+    <div class="header-left">
+        <span class="text-white font-bold">
+     拼音輸入法練習
+    </span>
+    </div>
+    <div class="header-right">
+        <a href="/" class="href"><i class="fas fa-keyboard text-white"></i></a>
+    </div>
+</div>
+<div class="menu">
+</div>
+<div class="paragraph-container">
+    <div class="content">
+        <div id="pinyinOutput" class="pinyin-container"></div>
+    </div>
+</div>
+<div class="footer hidden">
+   <span class="text-white">
+    contact
+   </span>
+    <span class="text-white">
+    support
+   </span>
+    <span class="text-white">
+    github
+   </span>
+    <span class="text-white">
+    discord
+   </span>
+    <span class="text-white">
+    twitter
+   </span>
+    <span class="text-white">
+    terms
+   </span>
+    <span class="text-white">
+    security
+   </span>
+    <span class="text-white">
+    privacy
+   </span>
+</div>
+<script>
+    const originalText = "{{ originalText }}";
+    const pinyinText = "{{ pinyinText }}";
+
+    const pinyinOutput = document.getElementById('pinyinOutput');
+
+    const originalChars = originalText.split(' ');
+    const pinyinWords = pinyinText.split(' ');
+
+    const pinyinSpans = [];
+
+    originalChars.forEach((char, index) => {
+        const charContainer = document.createElement('div');
+        charContainer.style.display = 'inline-flex';
+        charContainer.style.flexDirection = 'column';
+        charContainer.style.alignItems = 'center';
+        charContainer.style.marginRight = '10px';  // Add space between characters
+
+        const pinyinSpan = document.createElement('span');
+        pinyinSpan.className = 'pinyin';
+        pinyinSpan.dataset.pinyin = pinyinWords[index] || ''; // Ensure there's no undefined Pinyin
+        pinyinSpan.innerHTML = '&nbsp;'.repeat(pinyinSpan.dataset.pinyin.length); // Initialize with spaces to reserve space
+        charContainer.appendChild(pinyinSpan);
+        pinyinSpans.push(pinyinSpan);
+
+        const charSpan = document.createElement('span');
+        charSpan.textContent = char;
+        charContainer.appendChild(charSpan);
+
+        pinyinOutput.appendChild(charContainer);
+    });
+
+    let currentIndex = 0;
+    let currentInput = '';
+
+    document.addEventListener('keydown', (event) => {
+        if (event.key === 'Backspace') {
+            if (currentInput.length > 0) {
+                currentInput = currentInput.slice(0, -1);
+                updatePinyinColor();
+            }
+        } else if (event.key.length === 1 && /[0-9a-zA-Z\s]/.test(event.key)) {
+            currentInput += event.key;
+            updatePinyinColor();
+        }
+
+        // Prevent default action to avoid actual text input
+        event.preventDefault();
+    });
+
+    function updatePinyinColor() {
+        const pinyinWord = pinyinSpans[currentIndex].dataset.pinyin || '';
+        const inputWithoutSpaces = currentInput.replace(/\s+/g, '');
+        let updatedContent = '';
+
+        for (let i = 0; i < pinyinWord.length; i++) {
+            if (i < inputWithoutSpaces.length) {
+                if (inputWithoutSpaces[i] === pinyinWord[i]) {
+                    updatedContent += `<span class="correct">${pinyinWord[i]}</span>`;
+                } else {
+                    updatedContent += `<span class="incorrect">${pinyinWord[i]}</span>`;
+                }
+            } else {
+                updatedContent += `<span class="pinyin">${pinyinWord[i]}</span>`;
+            }
+        }
+
+        pinyinSpans[currentIndex].innerHTML = updatedContent;
+
+        if (inputWithoutSpaces === pinyinWord) {
+            currentIndex++;
+            currentInput = '';
+        }
+    }
+</script>
+</body>
+</html>
