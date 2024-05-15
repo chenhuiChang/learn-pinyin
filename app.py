@@ -5,9 +5,6 @@ from pypinyin import pinyin, Style
 
 app = Flask(__name__)
 
-app.config['DEBUG'] = True
-app.config['ENV'] = 'development'
-
 
 def is_chinese_char(char):
     return '\u4e00' <= char <= '\u9fff'
