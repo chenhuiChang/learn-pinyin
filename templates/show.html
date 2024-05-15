@@ -2,7 +2,7 @@
 <html lang="zh">
 <head>
     <meta charset="UTF-8">
-    <title>拼音顯示</title>
+    <title>Pinyin Practice</title>
     <style>
         .pinyin-container {
             display: flex;
@@ -16,8 +16,8 @@
             margin: 0 5px;
         }
         .pinyin {
-            font-size: 1.3em;
             color: grey;
+            min-width: 1em;
         }
         .correct {
             color: green;
@@ -54,6 +54,7 @@
         const pinyinSpan = document.createElement('span');
         pinyinSpan.className = 'pinyin';
         pinyinSpan.dataset.pinyin = pinyinWords[index] || ''; // Ensure there's no undefined Pinyin
+        pinyinSpan.innerHTML = '&nbsp;'.repeat(pinyinSpan.dataset.pinyin.length); // Initialize with spaces to reserve space
         charContainer.appendChild(pinyinSpan);
         pinyinSpans.push(pinyinSpan);
 
@@ -95,7 +96,7 @@
                     updatedContent += `<span class="incorrect">${pinyinWord[i]}</span>`;
                 }
             } else {
-                updatedContent += pinyinWord[i];
+                updatedContent += `<span class="pinyin">${pinyinWord[i]}</span>`;
             }
         }
 
