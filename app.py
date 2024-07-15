@@ -70,6 +70,8 @@ def show():
         for text in text_list:
             original_text_list.append(text)
             pinyin_text_list.append(convert_to_pinyin(text))
+            if len(original_text_list) > 400:
+                break
         original_text = ' '.join(original_text_list)
         pinyin_text = ' '.join(pinyin_text_list)
         return render_template('show-new.html', originalText=original_text, pinyinText=pinyin_text)
